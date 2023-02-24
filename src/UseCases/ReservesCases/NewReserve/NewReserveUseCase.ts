@@ -1,11 +1,12 @@
 import client from "../../../prisma/client";
+import DateValidate from "./DateValidate";
 
 interface IRequest {
   labId: string;
   userId: string;
-  date: number;
-  entryTime: number;
-  exitTime: number;
+  date: string;
+  entryTime: string;
+  exitTime: string;
 }
 
 class NewReserveUseCase {
@@ -21,16 +22,22 @@ class NewReserveUseCase {
       throw new Error("lab not found");
     }
 
-    const create = await client.reserve.create({
-      data: {
-        date,
-        entryTime,
-        exitTime,
-        user: { connect: { id: userId } },
-        lab: { connect: { id: labId } },
-      },
-    });
-    return create;
+    const validDate = new DateValidate();
+
+    const time = validDate.execute({ date, entryTime, exitTime });
+
+    // const create = await client.reserve.create({
+    //   data: {
+    //     date,
+    //     entryTime,
+    //     exitTime,
+    //     user: { connect: { id: userId } },
+    //     lab: { connect: { id: labId } },
+    //   },
+    // });
+    // return create;
+
+    return "ok";
   }
 }
 
