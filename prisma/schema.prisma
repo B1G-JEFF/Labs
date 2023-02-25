@@ -32,9 +32,9 @@ model Reserve {
   id        String @id @default(uuid())
   lab       Labs   @relation(fields: [labId], references: [id])
   user      User   @relation(fields: [userId], references: [id])
-  date      Int
-  entryTime Int
-  exitTime  Int
+  date      DateTime
+  entryTime DateTime
+  exitTime  DateTime
   userId    String
   labId     String
 }

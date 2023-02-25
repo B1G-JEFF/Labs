@@ -22,22 +22,26 @@ class NewReserveUseCase {
       throw new Error("lab not found");
     }
 
-    const validDate = new DateValidate();
+    const ValidDate = new DateValidate();
 
-    const time = validDate.execute({ date, entryTime, exitTime });
+    const { validDate, validEntry, validExit } = ValidDate.execute({
+      date,
+      entryTime,
+      exitTime,
+    });
 
-    // const create = await client.reserve.create({
-    //   data: {
-    //     date,
-    //     entryTime,
-    //     exitTime,
-    //     user: { connect: { id: userId } },
-    //     lab: { connect: { id: labId } },
-    //   },
-    // });
-    // return create;
-
-    return "ok";
+    
+    const create = await client.reserve.create({
+      data: {
+        date: validDate,
+        entryTime: validEntry,
+        exitTime: validExit,
+        user: { connect: { id: userId } },
+        lab: { connect: { id: labId } },
+      },
+    });
+    
+    return create;
   }
 }
 

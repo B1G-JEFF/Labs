@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 
+// tipando os parametros da request
 interface IRequest {
   date: string;
   entryTime: string;
@@ -8,24 +9,29 @@ interface IRequest {
 
 class DateValidate {
   execute({ date, entryTime, exitTime }: IRequest) {
+    // verificando o formato da data
     const validateDate = dayjs(date, "YYYY/MM/DD", true);
     if (!validateDate.isValid()) {
       throw new Error(
         "The date format is invalid !!! expected format 'YYYY/MM/DD'"
       );
     }
-
+    // verificando  o formato da hora
     const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
     const validEntryTime = regex.test(entryTime);
     const validExitTime = regex.test(exitTime);
 
     if (!validEntryTime || !validExitTime) {
-      throw new Error("The time format is invalid!!! expected format 'HH:mm'");
+      throw new Error(
+        "The time format is invalid!!! expected format 'HH:mm' '00:00' '23:59'"
+      );
     }
 
+    // dividindo a hora e os minutos
     const [entryHour, entryMinute] = entryTime.split(":");
     const [exitHour, exitMinute] = exitTime.split(":");
 
+    // convertendo para o formato do prisma
     const validDate = validateDate.toISOString();
     const validEntry = validateDate
       .add(parseInt(entryHour), "hour")
@@ -37,6 +43,21 @@ class DateValidate {
       .add(parseInt(exitMinute), "minute")
       .toISOString();
 
+    // verificando se a data e valido , ele nao pode ser anterior a agora
+    if (dayjs(validDate).isBefore(dayjs(), "day")) { 
+      throw new Error(
+        "invalid date it is not possible to book a day before today"
+      );
+    }
+    // verificando se o horario e valido , ele nao pode ser anterior a agora
+    if (
+      dayjs(validEntry).isBefore(dayjs()) ||
+      dayjs(validEntry).isBefore(dayjs())
+    ) {
+      throw new Error(
+        "invalid hour it is not possible to schedule a day before now"
+      );
+    }
     return { validDate, validEntry, validExit };
   }
 }
