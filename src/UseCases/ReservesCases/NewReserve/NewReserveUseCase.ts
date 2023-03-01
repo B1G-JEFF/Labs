@@ -24,10 +24,11 @@ class NewReserveUseCase {
 
     const ValidDate = new DateValidate();
 
-    const { validDate, validEntry, validExit } = ValidDate.execute({
+    const { validDate, validEntry, validExit } =await  ValidDate.execute({
       date,
       entryTime,
       exitTime,
+      labId
     });
 
     

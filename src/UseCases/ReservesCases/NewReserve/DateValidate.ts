@@ -1,14 +1,16 @@
 import dayjs from "dayjs";
-
+import HourValidate from "./HourValidate";
+const aulas = ["08:00", "08:00", "08:00", "08:00", "08:00", "08:00", "08:00"];
 // tipando os parametros da request
 interface IRequest {
   date: string;
   entryTime: string;
   exitTime: string;
+  labId: string;
 }
 
 class DateValidate {
-  execute({ date, entryTime, exitTime }: IRequest) {
+  async execute({ date, entryTime, exitTime }: IRequest) {
     // verificando o formato da data
     const validateDate = dayjs(date, "YYYY/MM/DD", true);
     if (!validateDate.isValid()) {
@@ -44,7 +46,7 @@ class DateValidate {
       .toISOString();
 
     // verificando se a data e valido , ele nao pode ser anterior a agora
-    if (dayjs(validDate).isBefore(dayjs(), "day")) { 
+    if (dayjs(validDate).isBefore(dayjs(), "day")) {
       throw new Error(
         "invalid date it is not possible to book a day before today"
       );
@@ -52,12 +54,17 @@ class DateValidate {
     // verificando se o horario e valido , ele nao pode ser anterior a agora
     if (
       dayjs(validEntry).isBefore(dayjs()) ||
-      dayjs(validEntry).isBefore(dayjs())
+      dayjs(validExit).isBefore(dayjs())
     ) {
       throw new Error(
         "invalid hour it is not possible to schedule a day before now"
       );
     }
+
+    const hourValidate = new HourValidate();
+
+    await hourValidate.execute(validDate, validEntry, validExit);
+
     return { validDate, validEntry, validExit };
   }
 }
