@@ -1,6 +1,8 @@
 import client from "../../../prisma/client";
 import DateValidate from "./DateValidate";
 
+
+// tipo os inputs 
 interface IRequest {
   labId: string;
   userId: string;
@@ -10,7 +12,10 @@ interface IRequest {
 }
 
 class NewReserveUseCase {
+
   async execute({ labId, userId, date, entryTime, exitTime }: IRequest) {
+    
+    // verifico se o lab e o user existem   
     const user = await client.user.findFirst({ where: { id: userId } });
     const lab = await client.labs.findFirst({ where: { id: labId } });
 
@@ -21,7 +26,8 @@ class NewReserveUseCase {
     if (!lab) {
       throw new Error("lab not found");
     }
-
+    
+    //valido o formato dos inputs    
     const ValidDate = new DateValidate();
 
     const { validDate, validEntry, validExit } =await  ValidDate.execute({
@@ -31,6 +37,7 @@ class NewReserveUseCase {
       labId
     });
 
+    //caso seja valido ele cria o 
     
     const create = await client.reserve.create({
       data: {

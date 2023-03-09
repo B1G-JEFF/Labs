@@ -38,3 +38,8 @@ model Reserve {
   userId    String
   labId     String
 }
+model ClassSchudules{
+  id String @id @default(uuid())
+  schudules String 
+  intervals String
+}

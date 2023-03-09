@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import HourValidate from "./HourValidate";
-const aulas = ["08:00", "08:00", "08:00", "08:00", "08:00", "08:00", "08:00"];
+
 // tipando os parametros da request
 interface IRequest {
   date: string;
@@ -61,10 +61,12 @@ class DateValidate {
       );
     }
 
+    // validando as horas e se a reserva pode ser criada 
     const hourValidate = new HourValidate();
 
     await hourValidate.execute(validDate, validEntry, validExit);
 
+    // caso esteja tudo ok ele retorna os inputs validos
     return { validDate, validEntry, validExit };
   }
 }

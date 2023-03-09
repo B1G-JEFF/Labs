@@ -1,4 +1,5 @@
 import { Router } from "express";
+import ClassschudulesController from "./UseCases/ClassSchudules/NewSchudules/NewClassSchudulesController";
 import AllLabsController from "./UseCases/LabCases/AllLabs/AllLabsController";
 import CreateLabController from "./UseCases/LabCases/CreateLab/CreateLabController";
 import DeleteLabController from "./UseCases/LabCases/DeleteLab/DeleteLabController";
@@ -38,9 +39,15 @@ router.delete("/deleteUser", deleteUserControler.handle);
 // reserve routes
 const newReserveController = new NewReserveController();
 const allReservesController = new AllReservesController();
-const nextWeekControler = new NextWeekController()
+const nextWeekControler = new NextWeekController();
 
 router.post("/reserve", newReserveController.handle);
-router.get("/allReserves",allReservesController.handle)
-router.get("/nextWeek", nextWeekControler.handle)
+router.get("/allReserves", allReservesController.handle);
+router.get("/nextWeek", nextWeekControler.handle);
 export { router };
+
+// class schudules
+
+const classSchudulesController = new ClassschudulesController();
+
+router.post("/classSchudueles", classSchudulesController.handle);
